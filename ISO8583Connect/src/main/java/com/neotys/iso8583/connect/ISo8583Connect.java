@@ -43,7 +43,7 @@ public class ISo8583Connect implements Action {
 			.append("- "+HOST+": Host of the application.\n")
 			.append("- "+PORT+": Port.\n")
 			.append("- "+ControllerCode+": Controller Code (VIS,CMN,FEP...etc)\n")
-			.append("- "+TypeofChannel+": Type of Channel to use. Value possible : ASCII,NCC,NACC,BASE24,HEX,RPB,VAP,CS,AMEX\n")
+			.append("- "+TypeofChannel+": Type of Channel to use. Value possible : ASCII,NCC,NACC,BASE24,HEX,RPB,VAP,CS,AMEX,BASE24TCP\n")
 			.append("- "+AddMessageLengthIntoHeader+": Boolean ( True or False). This will specify if the message lenth has to be added as the first information of the header\n")
 			.append("- "+IncludeHeaderinBitmap+": Boolean ( true or false). This will specify if the header has to be included in the Bitmap ( the message would have the header value twice)\n");
 		

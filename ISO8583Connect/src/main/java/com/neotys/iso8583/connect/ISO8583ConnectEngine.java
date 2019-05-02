@@ -4,16 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import org.jpos.iso.BaseChannel;
 import org.jpos.iso.ISOException;
-import org.jpos.iso.channel.ASCIIChannel;
-import org.jpos.iso.channel.AmexChannel;
-import org.jpos.iso.channel.BASE24Channel;
-import org.jpos.iso.channel.CSChannel;
-import org.jpos.iso.channel.HEXChannel;
-import org.jpos.iso.channel.NACChannel;
-import org.jpos.iso.channel.NCCChannel;
-import org.jpos.iso.channel.PADChannel;
-import org.jpos.iso.channel.RBPChannel;
-import org.jpos.iso.channel.VAPChannel;
+import org.jpos.iso.channel.*;
 import org.jpos.iso.packager.GenericPackager;
 
 import com.google.common.base.Strings;
@@ -315,6 +306,24 @@ public class ISO8583ConnectEngine implements ActionEngine {
 	                } else {
 	                    channel = new AmexChannel();
 	                }
+					break;
+				case "BASE24TCP":
+
+					if (!BoolAddMessageLength)
+					{
+						channel = new BASE24TCPChannel() {
+							@Override
+							protected void sendMessageLength(int len) throws IOException {
+							}
+
+							@Override
+							protected int getMessageLength() throws IOException, ISOException {
+								return -1;
+							}
+						};
+					} else {
+						channel = new BASE24TCPChannel();
+					}
 					break;
 			
 				default :
