@@ -3,6 +3,7 @@ package com.neotys.iso8583.send;
 
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -151,6 +152,7 @@ public class MessageSenderActionEngine implements ActionEngine {
 							out.append("Field-"+j+" : "+isoMsg.getString(j)+"\n");
 						}
 					}
+					out.append("header : "+ new String(isoMsg.getHeader(), StandardCharsets.UTF_8));
 					out.append("message length: " + send_PackedRequestData.length+"\n");
 					out.append("Hexa: " + bytesToHex(send_PackedRequestData)+"\n");
 				
