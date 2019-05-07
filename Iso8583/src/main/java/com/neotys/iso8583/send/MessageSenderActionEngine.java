@@ -121,7 +121,8 @@ public class MessageSenderActionEngine implements ActionEngine {
 				{
 					ISOMsg isoMsg = new ISOMsg();
 					isoMsg.setPackager(channel.getPackager());
-					isoMsg.setHeader(Header.getBytes());
+					//isoMsg.setHeader(Header.getBytes());
+					channel.setHeader(Header.getBytes());
 					isoMsg.setMTI(MTI);
 					context.getLogger().debug("SetMIT");
 					for(int key:FieldList.keySet())
@@ -152,14 +153,12 @@ public class MessageSenderActionEngine implements ActionEngine {
 							out.append("Field-"+j+" : "+isoMsg.getString(j)+"\n");
 						}
 					}
-					out.append("header : "+ new String(isoMsg.getHeader(), StandardCharsets.UTF_8));
 					out.append("message length: " + send_PackedRequestData.length+"\n");
 					out.append("Hexa: " + bytesToHex(send_PackedRequestData)+"\n");
 				
 					context.getLogger().debug(out.toString());
 					
 					context.getLogger().debug("sent");
-					channel.getLogger();
 					
 					
 					context.getLogger().debug("receiving");
