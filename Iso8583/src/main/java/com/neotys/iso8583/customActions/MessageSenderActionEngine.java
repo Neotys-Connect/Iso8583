@@ -1,9 +1,8 @@
-package com.neotys.iso8583.send;
+package com.neotys.iso8583.customActions;
 
 
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -18,7 +17,6 @@ import java.util.regex.Pattern;
 
 import org.jpos.iso.BaseChannel;
 import org.jpos.iso.ISOException;
-import org.jpos.iso.ISOHeader;
 import org.jpos.iso.ISOMsg;
 
 
@@ -28,8 +26,7 @@ import com.neotys.extensions.action.ActionParameter;
 import com.neotys.extensions.action.engine.ActionEngine;
 import com.neotys.extensions.action.engine.Context;
 import com.neotys.extensions.action.engine.SampleResult;
-
-
+import org.jpos.iso.header.BaseHeader;
 
 
 public class MessageSenderActionEngine implements ActionEngine {
@@ -107,10 +104,7 @@ public class MessageSenderActionEngine implements ActionEngine {
 			return getErrorResult(context, result, "Invalid argument: Missing parameter "
 					+ MessageSenderAction.ControllerCode+ ".");
 		}
-		if (Strings.isNullOrEmpty(Header)) {
-			return getErrorResult(context, result, "Invalid argument: Missing parameter "
-					+ MessageSenderAction.Header+ ".");
-		}
+
 	
 		try{
 			
@@ -121,8 +115,10 @@ public class MessageSenderActionEngine implements ActionEngine {
 				{
 					ISOMsg isoMsg = new ISOMsg();
 					isoMsg.setPackager(channel.getPackager());
-					//isoMsg.setHeader(Header.getBytes());
-					channel.setHeader(Header.getBytes());
+
+					if(Header !=null)
+						channel.setHeader(Header.getBytes());
+
 					isoMsg.setMTI(MTI);
 					context.getLogger().debug("SetMIT");
 					for(int key:FieldList.keySet())
@@ -134,7 +130,7 @@ public class MessageSenderActionEngine implements ActionEngine {
 					result.sampleStart();
 					context.getLogger().debug("before sending");
 		
-					
+
 					send_PackedRequestData=isoMsg.pack();
 					
 							
@@ -243,5 +239,22 @@ public class MessageSenderActionEngine implements ActionEngine {
 		// TODO Auto-generated method stub
 
 	}
+
+
+	///code generating the header
+// public class TCPHeader { public static void main(String[] args)
+// {
+// TODO Auto-generated method stub byte [] by={30,38,30,30,82,38,00,00,00,00,00,00,04,00,00,00,00,00,00,00,30,35,31,38,32,32,30,32,32,34,31,38,31,39,35,37,30,30,30,32,32,34,30,35,31,39,33,30,31};
+// byte[] res = new2ByteHeaderPacket(by);
+// System.out.println(res.toString()); }
+// public static byte[] new2ByteHeaderPacket(byte[] data)
+// {
+// int len = data.length;
+// byte[] buf = new byte[len + 2];
+// buf[0] = (byte)(len >> 8 & 0xFF);
+// buf[1] = (byte)(len & 0xFF);
+
+
+
 
 }

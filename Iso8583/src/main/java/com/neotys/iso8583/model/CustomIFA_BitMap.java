@@ -1,4 +1,4 @@
-package com.neotys.iso8583.connect;
+package com.neotys.iso8583.model;
 
 import java.util.BitSet;
 

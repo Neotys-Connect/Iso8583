@@ -1,4 +1,4 @@
-package com.neotys.iso8583.connect;
+package com.neotys.iso8583.customActions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class ISo8583Connect implements Action {
 	static final String TypeofChannel= "TypeofChannel";
 	static final String AddMessageLengthIntoHeader ="AddMessagelengthintoHeader";
 	static final String IncludeHeaderinBitmap ="IncludeHeaderinBitmap";
-	
+	static final String asciiheaderlengh="Asciiheaderlengh";
 	private static final String BUNDLE_NAME = "com.neotys.iso8583.connect.bundle";
     private static final String DISPLAY_NAME = ResourceBundle.getBundle("com.neotys.iso8583.connect.bundle", Locale.getDefault()).getString("displayName");
     private static final String DISPLAY_PATH = ResourceBundle.getBundle("com.neotys.iso8583.connect.bundle", Locale.getDefault()).getString("displayPath");
@@ -43,10 +43,10 @@ public class ISo8583Connect implements Action {
 			.append("- "+HOST+": Host of the application.\n")
 			.append("- "+PORT+": Port.\n")
 			.append("- "+ControllerCode+": Controller Code (VIS,CMN,FEP...etc)\n")
-			.append("- "+TypeofChannel+": Type of Channel to use. Value possible : ASCII,NCC,NACC,BASE24,HEX,RPB,VAP,CS,AMEX,BASE24TCP\n")
+			.append("- "+TypeofChannel+": Type of Channel to use. Value possible : ASCII,BCD,NCC,NACC,BASE24,HEX,RPB,VAP,CS,AMEX,BASE24TCP,RAW\n")
 			.append("- "+AddMessageLengthIntoHeader+": Boolean ( True or False). This will specify if the message lenth has to be added as the first information of the header\n")
-			.append("- "+IncludeHeaderinBitmap+": Boolean ( true or false). This will specify if the header has to be included in the Bitmap ( the message would have the header value twice)\n");
-		
+			.append("- "+IncludeHeaderinBitmap+": Boolean ( true or false). This will specify if the header has to be included in the Bitmap ( the message would have the header value twice)\n")
+			.append("- "+asciiheaderlengh+": Integer.  This will specify if theNumber of digits for the message length header\n");
 		return description.toString();
 	}
 

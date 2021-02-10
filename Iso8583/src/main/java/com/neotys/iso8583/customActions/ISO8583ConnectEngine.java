@@ -1,9 +1,10 @@
-package com.neotys.iso8583.connect;
+package com.neotys.iso8583.customActions;
 
 import java.io.IOException;
 import java.util.List;
 import org.jpos.iso.BaseChannel;
 import org.jpos.iso.ISOException;
+import org.jpos.iso.ISOUtil;
 import org.jpos.iso.channel.*;
 import org.jpos.iso.packager.GenericPackager;
 
@@ -19,6 +20,8 @@ public class ISO8583ConnectEngine implements ActionEngine {
 	String PORT;
 	String ControllerCode;
 	String TypeofChannel;
+	int asciilength;
+	String asciilength_string;
 	boolean BoolAddMessageLength;
 	boolean boolIncludeHeaderInBitmap;
 	
@@ -51,7 +54,11 @@ public class ISO8583ConnectEngine implements ActionEngine {
 			case ISo8583Connect.AddMessageLengthIntoHeader:
 				StrAddMessageLength = parameter.getValue();
 				break;
-			
+			case ISo8583Connect.asciiheaderlengh:
+				asciilength_string = parameter.getValue();
+				break;
+
+
 			}
 			
 		}
@@ -75,6 +82,9 @@ public class ISO8583ConnectEngine implements ActionEngine {
 						+ ISo8583Connect.IncludeHeaderinBitmap + ".");
 			}
 		}
+		if(!Strings.isNullOrEmpty(asciilength_string))
+			asciilength=Integer.parseInt(asciilength_string);
+
 		if (Strings.isNullOrEmpty(StrAddMessageLength)) {
 			BoolAddMessageLength=true;
 		}
@@ -133,16 +143,30 @@ public class ISO8583ConnectEngine implements ActionEngine {
 						channel = new ASCIIChannel() {
 		                        @Override
 		                        protected void sendMessageLength(int len) throws IOException {
+									serverOut.write (len >> 8);
+									serverOut.write (len);
 		                        }
 		
 		                        @Override
 		                        protected int getMessageLength() throws IOException, ISOException {
-		                            return -1;
+									int l = 0;
+									byte[] b = new byte[4];
+									while (l == 0) {
+										serverIn.readFully(b,0,2);
+										l = ((int)b[0] &0xFF) << 8 | (int)b[1] &0xFF;
+										if (l == 0) {
+											serverOut.write(b);
+											serverOut.flush();
+										}
+									}
+									return l;
 		                        }
 						};
 	                } else {
 	                    channel = new ASCIIChannel();
 	                }
+	                if(asciilength>0)
+	                	((ASCIIChannel) channel).setLengthDigits(asciilength);
 					break;
 
 				case "NCC":
@@ -325,7 +349,61 @@ public class ISO8583ConnectEngine implements ActionEngine {
 						channel = new BASE24TCPChannel();
 					}
 					break;
-			
+				case "RAW":
+
+					if (!BoolAddMessageLength)
+					{
+						channel = new RawChannel() {
+							@Override
+							protected void sendMessageLength(int len) throws IOException {
+							}
+
+							@Override
+							protected int getMessageLength() throws IOException, ISOException {
+								return -1;
+							}
+						};
+					} else {
+						channel = new RawChannel();
+					}
+					break;
+
+				case "BCD":
+
+					if (!BoolAddMessageLength)
+					{
+						channel = new BCDChannel() {
+							@Override
+							protected void sendMessageLength(int len) throws IOException {
+							}
+
+							@Override
+							protected int getMessageLength() throws IOException, ISOException {
+								return -1;
+							}
+						};
+					} else {
+						channel = new BCDChannel();
+					}
+					break;
+				case "GZIP":
+
+					if (!BoolAddMessageLength)
+					{
+						channel = new GZIPChannel() {
+							@Override
+							protected void sendMessageLength(int len) throws IOException {
+							}
+
+							@Override
+							protected int getMessageLength() throws IOException, ISOException {
+								return -1;
+							}
+						};
+					} else {
+						channel = new GZIPChannel();
+					}
+					break;
 				default :
 					return getErrorResult(context, result, "Invalid channel Code: channel not supported "
 							+ ISo8583Connect.TypeofChannel + ".");
@@ -340,7 +418,7 @@ public class ISO8583ConnectEngine implements ActionEngine {
 				context.getLogger().debug(" Channel connected to "+ channel.getName() + "to host"+ channel.getHost());
 			else
 				context.getLogger().debug(" Channel not connected to "+ channel.getName() + "to host"+ channel.getHost());
-				
+
 			result.sampleEnd();
 			result.setRequestContent("connected to :" + HOST);
 			context.getCurrentVirtualUser().put(ControllerCode+"_"+HOST+":"+PORT+".SocketObj",channel);

@@ -1,4 +1,4 @@
-package com.neotys.iso8583.send;
+package com.neotys.iso8583.customActions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,50 +12,35 @@ import com.neotys.extensions.action.Action;
 import com.neotys.extensions.action.ActionParameter;
 import com.neotys.extensions.action.engine.ActionEngine;
 
-public class MessageSenderAction implements Action {
-	static final String ISOMTI= "MTI";	
+public class ISO8583DisconnectAction implements Action {
 	static final String HOST= "Host";
 	static final String PORT= "Port";
 	static final String ControllerCode="ControllerCode";
-	static final String Header="Header";
-	static final String TIMEOUT= "Timeout";
-	private static final String BUNDLE_NAME = "com.neotys.iso8583.send.bundle";
-    private static final String DISPLAY_NAME = ResourceBundle.getBundle("com.neotys.iso8583.send.bundle", Locale.getDefault()).getString("displayName");
-    private static final String DISPLAY_PATH = ResourceBundle.getBundle("com.neotys.iso8583.send.bundle", Locale.getDefault()).getString("displayPath");
-
+	private static final String BUNDLE_NAME = "com.neotys.iso8583.disconnect.bundle";
+    private static final String DISPLAY_NAME = ResourceBundle.getBundle("com.neotys.iso8583.disconnect.bundle", Locale.getDefault()).getString("displayName");
+    private static final String DISPLAY_PATH = ResourceBundle.getBundle("com.neotys.iso8583.disconnect.bundle", Locale.getDefault()).getString("displayPath");
 	@Override
 	public List<ActionParameter> getDefaultActionParameters() {
 		List<ActionParameter> actionParameters=new ArrayList<ActionParameter>();
 		actionParameters.add(new ActionParameter("Host","Host of the application"));
-		actionParameters.add(new ActionParameter("Port","Port"));
-		actionParameters.add(new ActionParameter(TIMEOUT,"10"));
-		actionParameters.add(new ActionParameter(ControllerCode,"ControllerCode"));
-		actionParameters.add(new ActionParameter(Header,"Header of the message"));
-		actionParameters.add(new ActionParameter("MTI","Message Type Identifier"));
-		actionParameters.add(new ActionParameter("Field2","Field 2 of the ISo8583 message"));
+		actionParameters.add(new ActionParameter("Port","Port"));	
+		actionParameters.add(new ActionParameter("ControllerCode","ControllerCode"));	
 		return actionParameters;
 	}
 
 	@Override
 	public String getDescription() {
 		StringBuilder description = new StringBuilder();
-		description.append("ISO8583 Action Sends messages to an open socket connection.\n")
+		description.append("ISO8583 disconnect allow you to disconnect to the remote server.\n")
 			.append("Parameters are:\n")
 			.append("- "+HOST+": Host of the application.\n")
 			.append("- "+PORT+": Port.\n")
-			.append("- "+TIMEOUT+": the timeout when receiving the response in seconds.\n")
-			.append("- "+ControllerCode+": Controller Code (VIS,CMN,FEP...etc)\n")
-			.append("- "+Header+":Header of the message\n")
-			.append("- "+ISOMTI+": ISO8583 MTI of the message.\n")
-			.append("- Field2: Field of the messaget\n")
-			.append("- Fieldxx: Field of the message\n")
-			.append("This action can accept Fields from Field2 to Field128");
+			.append("- "+ControllerCode+": Controller Code (VIS,CMN,FEP...etc)\n");
+			
 		
 		
 		return description.toString();
 	}
-
-	@Override
 
 	public String getDisplayName()
     {
@@ -70,7 +55,7 @@ public class MessageSenderAction implements Action {
 	@Override
 	public Class<? extends ActionEngine> getEngineClass() {
 		// TODO Auto-generated method stub
-		return MessageSenderActionEngine.class;
+		return ISO8583DisconnectActionEngine.class;
 	}
 
 	@Override
@@ -93,7 +78,7 @@ public class MessageSenderAction implements Action {
 	@Override
 	public String getType() {
 		// TODO Auto-generated method stub
-		return "ISO8583 Sender";
+		return "ISO8583 Disconnect";
 	}
 
 }

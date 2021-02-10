@@ -1,4 +1,4 @@
-package com.neotys.iso8583.disconnect;
+package com.neotys.iso8583.customActions;
 
 import java.io.IOException;
 import java.util.List;

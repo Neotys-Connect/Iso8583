@@ -1,1 +1,3 @@
-com.neotys.iso8583.send.MessageSenderAction
+com.neotys.iso8583.customActions.MessageSenderAction
+com.neotys.iso8583.customActions.ISo8583Connect
+com.neotys.iso8583.customActions.ISO8583DisconnectAction
